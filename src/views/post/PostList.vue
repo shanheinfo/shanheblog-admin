@@ -128,24 +128,28 @@ const currentPost = ref(null)
 onMounted(async () => {
   await Promise.all([
     categoryStore.fetchCategories(),
-    fetchPosts()
+    fetchPosts({
+      page: currentPage.value,
+      pageSize: pageSize.value
+    })
   ])
 })
 
 // 获取文章列表
-const fetchPosts = () => {
-  const params = {
-    page: currentPage.value,
-    pageSize: pageSize.value,
-    ...searchForm
-  }
+const fetchPosts = (params) => {
   return postStore.fetchPosts(params)
 }
 
 // 搜索
 const handleSearch = () => {
   currentPage.value = 1
-  fetchPosts()
+  fetchPosts({
+    page: currentPage.value,
+    page_size: pageSize.value,
+    category_id: searchForm.categoryId,
+    title: searchForm.title,
+    status: searchForm.status
+  })
 }
 
 // 重置搜索
@@ -158,7 +162,11 @@ const resetSearch = () => {
 
 // 分页变化
 const handlePageChange = () => {
-  fetchPosts()
+  fetchPosts({
+    page: currentPage.value,
+    pageSize: pageSize.value,
+    ...searchForm
+  })
 }
 
 // 预览文章

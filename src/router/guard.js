@@ -4,13 +4,17 @@ export function setupRouteGuard(router) {
   router.beforeEach(async (to, from, next) => {
     const authStore = useAuthStore()
     
-    if (to.meta.requiresAuth && !authStore.token) {
-      next('/login')
+    if (to.path === '/login' && authStore.token) {
+      next('/')
       return
     }
     
-    if (to.path === '/login' && authStore.token) {
-      next('/')
+    if (to.meta.requiresAuth && !authStore.token) {
+      // if (import.meta.env.DEV) {
+      //   next()
+      //   return
+      // }
+      next('/login')
       return
     }
     

@@ -5,10 +5,10 @@ import request from '../utils/request'
 export const useDashboardStore = defineStore('dashboard', () => {
   const loading = ref(false)
   const stats = ref({
-    postCount: 0,
+    articleCount: 0,
     commentCount: 0,
-    viewCount: 0,
-    userCount: 0
+    userCount: 0,
+    pageViewCount: 0
   })
   const trendData = ref([])
   const categoryData = ref([])
@@ -19,8 +19,13 @@ export const useDashboardStore = defineStore('dashboard', () => {
   const fetchStats = async () => {
     loading.value = true
     try {
-      const data = await request.get('/dashboard/stats')
-      stats.value = data
+      const { data } = await request.get('/admin/dashboard/stats')
+      stats.value = {
+        articleCount: data.article_count,
+        commentCount: data.comment_count,
+        userCount: data.user_count,
+        pageViewCount: data.page_view_count
+      }
       return data
     } finally {
       loading.value = false
@@ -28,10 +33,17 @@ export const useDashboardStore = defineStore('dashboard', () => {
   }
 
   // 获取趋势数据
-  const fetchTrend = async (range = 'week') => {
+  const fetchTrend = async (period = 'week') => {
     try {
-      const data = await request.get('/dashboard/trend', { params: { range } })
-      trendData.value = data
+      const { data } = await request.get('/admin/dashboard/trend', { 
+        params: { period } 
+      })
+      trendData.value = data.map(item => ({
+        date: item.date,
+        articleCount: item.article_count,
+        commentCount: item.comment_count,
+        viewCount: item.view_count
+      }))
       return data
     } catch (error) {
       throw error
@@ -41,7 +53,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
   // 获取分类统计
   const fetchCategoryStats = async () => {
     try {
-      const data = await request.get('/dashboard/categories')
+      const data = await request.get('/admin/dashboard/categories')
       categoryData.value = data
       return data
     } catch (error) {
@@ -52,7 +64,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
   // 获取最新文章
   const fetchLatestPosts = async () => {
     try {
-      const data = await request.get('/dashboard/latest-posts')
+      const data = await request.get('/admin/dashboard/latest-posts')
       latestPosts.value = data
       return data
     } catch (error) {
@@ -63,7 +75,7 @@ export const useDashboardStore = defineStore('dashboard', () => {
   // 获取最新评论
   const fetchLatestComments = async () => {
     try {
-      const data = await request.get('/dashboard/latest-comments')
+      const data = await request.get('/admin/dashboard/latest-comments')
       latestComments.value = data
       return data
     } catch (error) {

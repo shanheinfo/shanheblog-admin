@@ -8,11 +8,16 @@ export const useCategoryStore = defineStore('category', () => {
   const loading = ref(false)
 
   // 获取分类列表
-  const fetchCategories = async (params) => {
+  const fetchCategories = async (params = {}) => {
     loading.value = true
     try {
-      const data = await request.get('/categories', { params })
-      categories.value = data.items
+      const { data } = await request.get('/admin/categories', { 
+        params: {
+          page: Number(params.page || 1),
+          size: Number(params.pageSize || 10)
+        }
+      })
+      categories.value = data.list
       total.value = data.total
     } finally {
       loading.value = false
@@ -22,7 +27,7 @@ export const useCategoryStore = defineStore('category', () => {
   // 创建分类
   const createCategory = async (categoryData) => {
     try {
-      return await request.post('/categories', categoryData)
+      return await request.post('/admin/categories', categoryData)
     } catch (error) {
       throw error
     }
@@ -31,7 +36,7 @@ export const useCategoryStore = defineStore('category', () => {
   // 更新分类
   const updateCategory = async (id, categoryData) => {
     try {
-      return await request.put(`/categories/${id}`, categoryData)
+      return await request.put(`/admin/categories/${id}`, categoryData)
     } catch (error) {
       throw error
     }
@@ -40,7 +45,7 @@ export const useCategoryStore = defineStore('category', () => {
   // 删除分类
   const deleteCategory = async (id) => {
     try {
-      await request.delete(`/categories/${id}`)
+      await request.delete(`/admin/categories/${id}`)
     } catch (error) {
       throw error
     }

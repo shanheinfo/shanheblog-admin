@@ -17,10 +17,15 @@
           <template #title>仪表盘</template>
         </el-menu-item>
         
-        <el-menu-item index="/posts">
-          <el-icon><Document /></el-icon>
-          <template #title>文章管理</template>
-        </el-menu-item>
+        <el-sub-menu index="/posts">
+          <template #title>
+            <el-icon><Document /></el-icon>
+            <span>文章管理</span>
+          </template>
+          <el-menu-item index="/posts">文章列表</el-menu-item>
+          <el-menu-item index="/posts/create">写文章</el-menu-item>
+          <el-menu-item index="/drafts">草稿管理</el-menu-item>
+        </el-sub-menu>
         
         <el-menu-item index="/categories">
           <el-icon><Files /></el-icon>

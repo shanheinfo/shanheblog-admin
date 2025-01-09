@@ -79,4 +79,4 @@ onMounted(() => {
   fetchPost()
 })
 </script>
-</script>`
+

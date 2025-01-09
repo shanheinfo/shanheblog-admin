@@ -24,6 +24,9 @@ const initChart = () => {
     tooltip: {
       trigger: 'axis'
     },
+    legend: {
+      data: ['文章数', '评论数', '访问量']
+    },
     xAxis: {
       type: 'category',
       data: props.data.map(item => item.date)
@@ -33,12 +36,22 @@ const initChart = () => {
     },
     series: [
       {
-        data: props.data.map(item => item.count),
+        name: '文章数',
+        data: props.data.map(item => item.articleCount),
         type: 'line',
-        smooth: true,
-        areaStyle: {
-          opacity: 0.3
-        }
+        smooth: true
+      },
+      {
+        name: '评论数',
+        data: props.data.map(item => item.commentCount),
+        type: 'line',
+        smooth: true
+      },
+      {
+        name: '访问量',
+        data: props.data.map(item => item.viewCount),
+        type: 'line',
+        smooth: true
       }
     ]
   }
@@ -52,7 +65,13 @@ watch(() => props.data, () => {
     },
     series: [
       {
-        data: props.data.map(item => item.count)
+        data: props.data.map(item => item.articleCount)
+      },
+      {
+        data: props.data.map(item => item.commentCount)
+      },
+      {
+        data: props.data.map(item => item.viewCount)
       }
     ]
   })
